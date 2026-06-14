@@ -1,0 +1,41 @@
+export type LearningMode = "simple" | "advanced";
+
+export type JourneyVisualType =
+  | "human-body"
+  | "digestive-system"
+  | "bloodstream"
+  | "cell"
+  | "mitochondrion"
+  | "electron-transport-chain"
+  | "atp-production";
+
+export interface JourneyStep {
+  id: string;
+  title: string;
+  description: string;
+  advancedDescription: string;
+  visualType: JourneyVisualType;
+  zoomLevel: number;
+  duration: number;
+  keyConcepts: string[];
+}
+
+export type ArticleCategory =
+  | "Nutrition"
+  | "Metabolism"
+  | "Mitochondria"
+  | "Exercise"
+  | "Fasting"
+  | "Lifestyle";
+
+export interface Article {
+  slug: string;
+  title: string;
+  description: string;
+  category: ArticleCategory;
+  tags: string[];
+  publishedAt: string;
+  updatedAt: string;
+  featured: boolean;
+  body: string[];
+}

@@ -1,0 +1,49 @@
+interface JourneyControlsProps {
+  canGoBack: boolean;
+  isLastStep: boolean;
+  isComplete: boolean;
+  onBack: () => void;
+  onNext: () => void;
+  onRestart: () => void;
+}
+
+export function JourneyControls({
+  canGoBack,
+  isLastStep,
+  isComplete,
+  onBack,
+  onNext,
+  onRestart
+}: JourneyControlsProps) {
+  if (isComplete) {
+    return (
+      <button
+        type="button"
+        onClick={onRestart}
+        className="rounded-md bg-leaf px-5 py-3 text-sm font-semibold text-white transition hover:bg-ink focus:outline-none focus:ring-2 focus:ring-leaf focus:ring-offset-2"
+      >
+        Restart journey
+      </button>
+    );
+  }
+
+  return (
+    <div className="flex flex-wrap gap-3">
+      <button
+        type="button"
+        onClick={onBack}
+        disabled={!canGoBack}
+        className="rounded-md border border-ink/15 bg-white px-5 py-3 text-sm font-semibold text-ink transition hover:border-leaf hover:text-leaf focus:outline-none focus:ring-2 focus:ring-leaf focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-45"
+      >
+        Previous
+      </button>
+      <button
+        type="button"
+        onClick={onNext}
+        className="rounded-md bg-leaf px-5 py-3 text-sm font-semibold text-white transition hover:bg-ink focus:outline-none focus:ring-2 focus:ring-leaf focus:ring-offset-2"
+      >
+        {isLastStep ? "Complete journey" : "Next step"}
+      </button>
+    </div>
+  );
+}
