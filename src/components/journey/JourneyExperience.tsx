@@ -1,21 +1,25 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { journeySteps } from "@/content/journey";
-import type { LearningMode } from "@/types/content";
+import type { JourneyStep, LearningMode } from "@/types/content";
 import { JourneyVisual } from "@/components/visuals/JourneyVisual";
 import { JourneyControls } from "./JourneyControls";
 import { JourneyProgress } from "./JourneyProgress";
 import { JourneyStagePanel } from "./JourneyStagePanel";
 import { LearningModeToggle } from "./LearningModeToggle";
 
-export function JourneyExperience() {
+interface JourneyExperienceProps {
+  steps: JourneyStep[];
+}
+
+export function JourneyExperience({ steps }: JourneyExperienceProps) {
   const [activeStepIndex, setActiveStepIndex] = useState(0);
   const [learningMode, setLearningMode] = useState<LearningMode>("simple");
   const [isComplete, setIsComplete] = useState(false);
 
-  const activeStep = journeySteps[activeStepIndex];
-  const isLastStep = activeStepIndex === journeySteps.length - 1;
+  const activeStep = steps[activeStepIndex];
+  const totalSteps = steps.length;
+  const isLastStep = activeStepIndex === totalSteps - 1;
 
   const completionSummary = useMemo(
     () => [
@@ -37,12 +41,25 @@ export function JourneyExperience() {
       return;
     }
 
-    setActiveStepIndex((index) => Math.min(journeySteps.length - 1, index + 1));
+    setActiveStepIndex((index) => Math.min(totalSteps - 1, index + 1));
   }
 
   function restart() {
     setActiveStepIndex(0);
     setIsComplete(false);
+  }
+
+  if (!activeStep) {
+    return (
+      <div className="mx-auto max-w-3xl px-4 pb-16 text-center sm:px-6 lg:px-8">
+        <div className="rounded-lg border border-ink/10 bg-white p-8 shadow-sm">
+          <h2 className="text-2xl font-bold text-ink">Journey unavailable</h2>
+          <p className="mt-3 text-ink/70">
+            No journey stages are available yet.
+          </p>
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -51,12 +68,38 @@ export function JourneyExperience() {
         <div className="rounded-lg border border-ink/10 bg-white p-4 shadow-sm">
           <div className="mb-4 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <JourneyProgress
-              current={isComplete ? journeySteps.length : activeStepIndex + 1}
-              total={journeySteps.length}
+              current={isComplete ? totalSteps : activeStepIndex + 1}
+              total={totalSteps}
             />
           </div>
+          <ol
+            className="mb-5 grid grid-cols-3 gap-2 text-xs font-medium text-ink/60 sm:grid-cols-5 lg:grid-cols-9"
+            aria-label="Journey stages"
+          >
+            {steps.map((step, index) => {
+              const isActive = !isComplete && index === activeStepIndex;
+              const isVisited = isComplete || index < activeStepIndex;
+
+              return (
+                <li
+                  key={step.id}
+                  aria-current={isActive ? "step" : undefined}
+                  className={`rounded-md border px-2 py-2 text-center ${
+                    isActive
+                      ? "border-leaf bg-leaf text-white"
+                      : isVisited
+                        ? "border-leaf/20 bg-leaf/10 text-leaf"
+                        : "border-ink/10 bg-white"
+                  }`}
+                >
+                  {index + 1}
+                  <span className="sr-only">. {step.title}</span>
+                </li>
+              );
+            })}
+          </ol>
           {isComplete ? (
-            <div className="flex min-h-[420px] flex-col justify-center rounded-lg bg-leaf/10 p-8">
+            <div className="flex min-h-[320px] flex-col justify-center rounded-lg bg-leaf/10 p-6 sm:min-h-[420px] sm:p-8">
               <p className="text-sm font-semibold uppercase tracking-wide text-leaf">
                 Journey complete
               </p>
@@ -94,6 +137,7 @@ export function JourneyExperience() {
           canGoBack={activeStepIndex > 0}
           isLastStep={isLastStep}
           isComplete={isComplete}
+          currentStepTitle={activeStep.title}
           onBack={goBack}
           onNext={goNext}
           onRestart={restart}
