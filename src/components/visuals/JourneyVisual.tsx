@@ -15,8 +15,14 @@ export function JourneyVisual({ type }: JourneyVisualProps) {
   switch (type) {
     case "human-body":
       return <HumanBodySvg />;
-    case "digestive-system":
-      return <DigestiveSystemSvg />;
+    case "mouth":
+      return <DigestiveSystemSvg stage="mouth" />;
+    case "esophagus":
+      return <DigestiveSystemSvg stage="esophagus" />;
+    case "stomach":
+      return <DigestiveSystemSvg stage="stomach" />;
+    case "small-intestine":
+      return <DigestiveSystemSvg stage="small-intestine" />;
     case "bloodstream":
       return <BloodstreamSvg />;
     case "cell":

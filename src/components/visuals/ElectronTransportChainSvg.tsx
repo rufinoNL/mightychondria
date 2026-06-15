@@ -22,6 +22,18 @@ export function ElectronTransportChainSvg() {
         </g>
       ))}
       <path d="M96 88h186" stroke="#d89216" strokeWidth="5" strokeLinecap="round" />
+      <circle cx="300" cy="88" r="11" fill="#2878b8" />
+      <text x="300" y="92" textAnchor="middle" className="fill-white text-xs font-bold">
+        O2
+      </text>
+      <circle cx="328" cy="88" r="9" fill="#8ecae6" />
+      <text x="326" y="68" textAnchor="middle" className="fill-ink text-xs font-semibold">
+        water
+      </text>
+      <path d="M106 210c46 18 108 18 184 0" fill="none" stroke="#1f7a5a" strokeWidth="5" strokeLinecap="round" strokeDasharray="8 8" />
+      <text x="198" y="226" textAnchor="middle" className="fill-ink text-xs font-semibold">
+        proton gradient
+      </text>
       <text x="188" y="76" textAnchor="middle" className="fill-ink text-xs font-semibold">
         electrons move toward oxygen
       </text>

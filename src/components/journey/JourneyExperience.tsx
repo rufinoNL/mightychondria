@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useMemo, useState } from "react";
 import type { JourneyStep, LearningMode } from "@/types/content";
 import { JourneyVisual } from "@/components/visuals/JourneyVisual";
@@ -15,6 +16,7 @@ interface JourneyExperienceProps {
 export function JourneyExperience({ steps }: JourneyExperienceProps) {
   const [activeStepIndex, setActiveStepIndex] = useState(0);
   const [learningMode, setLearningMode] = useState<LearningMode>("simple");
+  const [hasStarted, setHasStarted] = useState(false);
   const [isComplete, setIsComplete] = useState(false);
 
   const activeStep = steps[activeStepIndex];
@@ -35,7 +37,21 @@ export function JourneyExperience({ steps }: JourneyExperienceProps) {
     setActiveStepIndex((index) => Math.max(0, index - 1));
   }
 
+  function startJourney() {
+    setHasStarted(true);
+    setIsComplete(false);
+    setActiveStepIndex(0);
+  }
+
+  function goToStep(index: number) {
+    setHasStarted(true);
+    setIsComplete(false);
+    setActiveStepIndex(Math.max(0, Math.min(totalSteps - 1, index)));
+  }
+
   function goNext() {
+    setHasStarted(true);
+
     if (isLastStep) {
       setIsComplete(true);
       return;
@@ -46,6 +62,7 @@ export function JourneyExperience({ steps }: JourneyExperienceProps) {
 
   function restart() {
     setActiveStepIndex(0);
+    setHasStarted(false);
     setIsComplete(false);
   }
 
@@ -66,51 +83,100 @@ export function JourneyExperience({ steps }: JourneyExperienceProps) {
     <div className="mx-auto grid max-w-6xl gap-6 px-4 pb-16 sm:px-6 lg:grid-cols-[minmax(0,1.4fr)_minmax(320px,0.8fr)] lg:px-8">
       <div className="space-y-5">
         <div className="rounded-lg border border-ink/10 bg-white p-4 shadow-sm">
-          <div className="mb-4 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-            <JourneyProgress
-              current={isComplete ? totalSteps : activeStepIndex + 1}
-              total={totalSteps}
-            />
-          </div>
+          {hasStarted ? (
+            <div className="mb-4 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+              <JourneyProgress
+                current={isComplete ? totalSteps : activeStepIndex + 1}
+                total={totalSteps}
+              />
+            </div>
+          ) : null}
           <ol
             className="mb-5 grid grid-cols-3 gap-2 text-xs font-medium text-ink/60 sm:grid-cols-5 lg:grid-cols-9"
             aria-label="Journey stages"
           >
             {steps.map((step, index) => {
-              const isActive = !isComplete && index === activeStepIndex;
-              const isVisited = isComplete || index < activeStepIndex;
+              const isActive = hasStarted && !isComplete && index === activeStepIndex;
+              const isVisited = isComplete || (hasStarted && index < activeStepIndex);
 
               return (
-                <li
-                  key={step.id}
-                  aria-current={isActive ? "step" : undefined}
-                  className={`rounded-md border px-2 py-2 text-center ${
-                    isActive
-                      ? "border-leaf bg-leaf text-white"
-                      : isVisited
-                        ? "border-leaf/20 bg-leaf/10 text-leaf"
-                        : "border-ink/10 bg-white"
-                  }`}
-                >
-                  {index + 1}
-                  <span className="sr-only">. {step.title}</span>
+                <li key={step.id}>
+                  <button
+                    type="button"
+                    onClick={() => goToStep(index)}
+                    aria-current={isActive ? "step" : undefined}
+                    aria-label={`Go to stage ${index + 1}: ${step.title}`}
+                    className={`h-full w-full rounded-md border px-2 py-2 text-center transition focus:outline-none focus:ring-2 focus:ring-leaf focus:ring-offset-2 ${
+                      isActive
+                        ? "border-leaf bg-leaf text-white"
+                        : isVisited
+                          ? "border-leaf/20 bg-leaf/10 text-leaf hover:border-leaf"
+                          : "border-ink/10 bg-white hover:border-leaf hover:text-leaf"
+                    }`}
+                  >
+                    <span aria-hidden="true">{index + 1}</span>
+                    <span className="sr-only">. {step.title}</span>
+                  </button>
                 </li>
               );
             })}
           </ol>
-          {isComplete ? (
+          {!hasStarted ? (
+            <div className="grid min-h-[360px] place-items-center rounded-lg bg-leaf/10 p-6 text-center sm:min-h-[440px] sm:p-8">
+              <div className="max-w-xl">
+                <p className="text-sm font-semibold uppercase tracking-wide text-leaf">
+                  Start here
+                </p>
+                <h2 className="mt-3 text-3xl font-bold text-ink">
+                  Trace one meal into cellular ATP.
+                </h2>
+                <p className="mt-4 text-base leading-7 text-ink/75">
+                  Move through {totalSteps} stages, from the first bite to
+                  ATP synthase. Switch between simple and advanced explanations
+                  at any point.
+                </p>
+                <button
+                  type="button"
+                  onClick={startJourney}
+                  className="mt-7 rounded-md bg-leaf px-5 py-3 text-sm font-semibold text-white transition hover:bg-ink focus:outline-none focus:ring-2 focus:ring-leaf focus:ring-offset-2"
+                >
+                  Begin journey
+                </button>
+              </div>
+            </div>
+          ) : isComplete ? (
             <div className="flex min-h-[320px] flex-col justify-center rounded-lg bg-leaf/10 p-6 sm:min-h-[420px] sm:p-8">
               <p className="text-sm font-semibold uppercase tracking-wide text-leaf">
                 Journey complete
               </p>
               <h2 className="mt-3 text-3xl font-bold text-ink">
-                Food has become usable cellular energy.
+                You followed food all the way to ATP.
               </h2>
+              <p className="mt-4 text-base leading-7 text-ink/75">
+                The core pattern is now visible: digestion creates absorbable
+                nutrients, circulation delivers nutrients and oxygen, and cells
+                use mitochondrial pathways to convert nutrient energy into ATP.
+              </p>
               <ul className="mt-6 space-y-3 text-base leading-7 text-ink/75">
                 {completionSummary.map((item) => (
                   <li key={item}>{item}</li>
                 ))}
               </ul>
+              <div className="mt-7 flex flex-wrap gap-3">
+                <Link
+                  href="/learn"
+                  className="rounded-md bg-leaf px-5 py-3 text-sm font-semibold text-white transition hover:bg-ink focus:outline-none focus:ring-2 focus:ring-leaf focus:ring-offset-2"
+                >
+                  Continue learning
+                </Link>
+                <button
+                  type="button"
+                  onClick={restart}
+                  className="rounded-md border border-ink/15 bg-white px-5 py-3 text-sm font-semibold text-ink transition hover:border-leaf hover:text-leaf focus:outline-none focus:ring-2 focus:ring-leaf focus:ring-offset-2"
+                >
+                  Restart from intro
+                </button>
+              </div>
             </div>
           ) : (
             <JourneyVisual type={activeStep.visualType} />
@@ -122,26 +188,43 @@ export function JourneyExperience({ steps }: JourneyExperienceProps) {
         <div className="flex items-center justify-between gap-4">
           <LearningModeToggle value={learningMode} onChange={setLearningMode} />
         </div>
-        {!isComplete ? (
+        {!hasStarted ? (
+          <div className="rounded-lg border border-ink/10 bg-white p-5 shadow-sm">
+            <h2 className="text-2xl font-bold text-ink">What you will learn</h2>
+            <p className="mt-4 text-base leading-7 text-ink/75">
+              This journey connects everyday food choices to the cellular
+              chemistry that powers movement, repair, temperature regulation,
+              and thinking.
+            </p>
+            <div className="mt-5 grid gap-3 text-sm text-ink/75">
+              <div className="rounded-md bg-leaf/10 p-3">Digest food into nutrients.</div>
+              <div className="rounded-md bg-oxygen/10 p-3">Deliver fuel and oxygen to cells.</div>
+              <div className="rounded-md bg-glucose/10 p-3">Convert nutrient energy into ATP.</div>
+            </div>
+          </div>
+        ) : !isComplete ? (
           <JourneyStagePanel step={activeStep} mode={learningMode} />
         ) : (
           <div className="rounded-lg border border-ink/10 bg-white p-5 shadow-sm">
-            <h2 className="text-2xl font-bold text-ink">What you completed</h2>
+            <h2 className="text-2xl font-bold text-ink">Key takeaway</h2>
             <p className="mt-4 text-base leading-7 text-ink/75">
-              You followed nutrients from digestion through bloodstream delivery,
-              cellular entry, mitochondrial electron transport, and ATP production.
+              ATP production depends on a chain of connected systems. Digestion,
+              circulation, oxygen delivery, cell metabolism, and mitochondrial
+              membranes all matter.
             </p>
           </div>
         )}
-        <JourneyControls
-          canGoBack={activeStepIndex > 0}
-          isLastStep={isLastStep}
-          isComplete={isComplete}
-          currentStepTitle={activeStep.title}
-          onBack={goBack}
-          onNext={goNext}
-          onRestart={restart}
-        />
+        {hasStarted ? (
+          <JourneyControls
+            canGoBack={activeStepIndex > 0}
+            isLastStep={isLastStep}
+            isComplete={isComplete}
+            currentStepTitle={activeStep.title}
+            onBack={goBack}
+            onNext={goNext}
+            onRestart={restart}
+          />
+        ) : null}
       </div>
     </div>
   );

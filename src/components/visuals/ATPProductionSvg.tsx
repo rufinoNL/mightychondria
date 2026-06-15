@@ -9,9 +9,19 @@ export function ATPProductionSvg() {
       <text x="200" y="82" textAnchor="middle" className="fill-white text-sm font-bold">
         ATP
       </text>
+      <text x="200" y="126" textAnchor="middle" className="fill-ink text-xs font-semibold">
+        ATP synthase
+      </text>
       {[116, 146, 254, 286].map((cx) => (
         <circle key={cx} cx={cx} cy="214" r="14" fill="#d89216" />
       ))}
+      <path d="M112 190v-26M146 190v-26M254 190v-26M286 190v-26" stroke="#1f7a5a" strokeWidth="4" strokeLinecap="round" />
+      <text x="118" y="240" textAnchor="middle" className="fill-ink text-xs font-semibold">
+        H+
+      </text>
+      <text x="282" y="240" textAnchor="middle" className="fill-ink text-xs font-semibold">
+        H+
+      </text>
       <text x="200" y="264" textAnchor="middle" className="fill-ink text-sm font-semibold">
         ATP synthase uses the gradient to produce ATP
       </text>

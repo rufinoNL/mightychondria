@@ -2,7 +2,10 @@ export type LearningMode = "simple" | "advanced";
 
 export type JourneyVisualType =
   | "human-body"
-  | "digestive-system"
+  | "mouth"
+  | "esophagus"
+  | "stomach"
+  | "small-intestine"
   | "bloodstream"
   | "cell"
   | "mitochondrion"
@@ -14,6 +17,7 @@ export interface JourneyStep {
   title: string;
   description: string;
   advancedDescription: string;
+  whyThisMatters: string;
   visualType: JourneyVisualType;
   zoomLevel: number;
   duration: number;

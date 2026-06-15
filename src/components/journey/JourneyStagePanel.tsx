@@ -15,6 +15,12 @@ export function JourneyStagePanel({ step, mode }: JourneyStagePanelProps) {
       </p>
       <h2 className="mt-2 text-2xl font-bold text-ink">{step.title}</h2>
       <p className="mt-4 text-base leading-7 text-ink/75">{copy}</p>
+      <div className="mt-5 rounded-md border border-glucose/20 bg-glucose/10 p-4">
+        <h3 className="text-sm font-semibold text-ink">Why this matters</h3>
+        <p className="mt-2 text-sm leading-6 text-ink/75">
+          {step.whyThisMatters}
+        </p>
+      </div>
       <div className="mt-5">
         <h3 className="text-sm font-semibold text-ink">Key concepts</h3>
         <div className="mt-3 flex flex-wrap gap-2">

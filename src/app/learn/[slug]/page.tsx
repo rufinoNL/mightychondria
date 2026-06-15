@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { PageHeader } from "@/components/layout/PageHeader";
+import { ButtonLink } from "@/components/ui/ButtonLink";
 import { articles, getArticleBySlug } from "@/content/articles";
 
 interface ArticlePageProps {
@@ -51,6 +52,18 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
               {paragraph}
             </p>
           ))}
+          <div className="mt-8 rounded-md border border-leaf/20 bg-leaf/10 p-5">
+            <h2 className="text-xl font-semibold text-ink">
+              See this in the journey
+            </h2>
+            <p className="mt-3 text-sm leading-6 text-ink/70">
+              Connect this article to the full path from digestion to
+              mitochondrial ATP production.
+            </p>
+            <div className="mt-4">
+              <ButtonLink href="/journey">Open interactive journey</ButtonLink>
+            </div>
+          </div>
         </div>
       </article>
     </>
