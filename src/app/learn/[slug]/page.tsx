@@ -38,6 +38,15 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
     notFound();
   }
 
+  const relatedArticles = articles
+    .filter((candidate) => candidate.slug !== article.slug)
+    .filter(
+      (candidate) =>
+        candidate.category === article.category ||
+        candidate.tags.some((tag) => article.tags.includes(tag))
+    )
+    .slice(0, 3);
+
   return (
     <>
       <PageHeader
@@ -64,6 +73,22 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
               <ButtonLink href="/journey">Open interactive journey</ButtonLink>
             </div>
           </div>
+          {relatedArticles.length > 0 ? (
+            <div className="mt-6 rounded-md border border-ink/10 bg-white p-5">
+              <h2 className="text-xl font-semibold text-ink">Related lessons</h2>
+              <div className="mt-4 grid gap-3">
+                {relatedArticles.map((relatedArticle) => (
+                  <ButtonLink
+                    key={relatedArticle.slug}
+                    href={`/learn/${relatedArticle.slug}`}
+                    variant="secondary"
+                  >
+                    {relatedArticle.title}
+                  </ButtonLink>
+                ))}
+              </div>
+            </div>
+          ) : null}
         </div>
       </article>
     </>

@@ -1,28 +1,63 @@
 import { VisualFrame } from "./VisualFrame";
+import { ZoomTargetRing } from "./ZoomTargetRing";
+import type { VisualLayerMetadata } from "./visualLayers";
 
-export function MitochondrionSvg() {
+interface MitochondrionSvgProps {
+  metadata: VisualLayerMetadata;
+}
+
+export function MitochondrionSvg({ metadata }: MitochondrionSvgProps) {
   return (
-    <VisualFrame title="Mitochondrion structure">
-      <ellipse cx="200" cy="150" rx="128" ry="72" fill="#fbd6b7" stroke="#8b5f3c" strokeWidth="5" />
-      <ellipse cx="200" cy="150" rx="102" ry="50" fill="#fff4e8" stroke="#8b5f3c" strokeWidth="3" />
+    <VisualFrame title="Mitochondria convert nutrient energy into ATP" metadata={metadata}>
+      <ellipse cx="200" cy="150" rx="132" ry="74" fill="#fbd6b7" opacity="0.72" />
+      <ellipse
+        cx="200"
+        cy="150"
+        rx="132"
+        ry="74"
+        fill="none"
+        stroke="#8b5f3c"
+        strokeWidth="4"
+      />
+      <ellipse cx="200" cy="150" rx="106" ry="52" fill="#fff4e8" opacity="0.92" />
+      <ellipse
+        cx="200"
+        cy="150"
+        rx="106"
+        ry="52"
+        fill="none"
+        stroke="#8b5f3c"
+        strokeWidth="2.5"
+      />
       <path
-        d="M104 148c28-40 54 40 82 0s54 40 82 0 38 18 48 28"
+        d="M112 148c18-26 38-26 56 0s38 26 56 0 38-26 56 0"
         fill="none"
         stroke="#1f7a5a"
-        strokeWidth="8"
+        strokeWidth="6"
         strokeLinecap="round"
+        strokeLinejoin="round"
       />
-      <circle cx="140" cy="116" r="9" fill="#d89216" />
-      <circle cx="162" cy="122" r="7" fill="#2878b8" />
-      <text x="132" y="96" className="fill-ink text-xs font-semibold">
+      <path
+        d="M128 174c16-18 34-18 50 0s34 18 50 0 34-18 50 0"
+        fill="none"
+        stroke="#1f7a5a"
+        strokeWidth="4"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        opacity="0.55"
+      />
+      <circle cx="136" cy="118" r="10" fill="#d89216" opacity="0.92" />
+      <circle cx="160" cy="124" r="8" fill="#2878b8" opacity="0.9" />
+      <text x="126" y="98" className="fill-ink text-xs font-semibold">
         NADH
       </text>
+      <text x="168" y="108" className="fill-ink text-xs font-semibold">
+        FADH2
+      </text>
       <text x="200" y="132" textAnchor="middle" className="fill-ink text-xs font-semibold">
-        inner membrane
+        cristae
       </text>
-      <text x="200" y="264" textAnchor="middle" className="fill-ink text-sm font-semibold">
-        Mitochondria convert nutrient energy into ATP
-      </text>
+      <ZoomTargetRing cx={220} cy={150} r={58} />
     </VisualFrame>
   );
 }

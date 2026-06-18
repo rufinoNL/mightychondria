@@ -22,6 +22,7 @@ export interface JourneyStep {
   zoomLevel: number;
   duration: number;
   keyConcepts: string[];
+  relatedArticleSlug?: string;
 }
 
 export type ArticleCategory =

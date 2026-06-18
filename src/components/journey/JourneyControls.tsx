@@ -23,7 +23,7 @@ export function JourneyControls({
         type="button"
         onClick={onRestart}
         aria-label="Restart the human energy journey from the first step"
-        className="rounded-md bg-leaf px-5 py-3 text-sm font-semibold text-white transition hover:bg-ink focus:outline-none focus:ring-2 focus:ring-leaf focus:ring-offset-2"
+        className="w-full rounded-md bg-leaf px-5 py-3 text-sm font-semibold text-white transition hover:bg-ink focus:outline-none focus:ring-2 focus:ring-leaf focus:ring-offset-2 sm:w-auto"
       >
         Restart journey
       </button>
@@ -31,7 +31,7 @@ export function JourneyControls({
   }
 
   return (
-    <div className="flex flex-wrap gap-3">
+    <div className="grid gap-3 sm:flex sm:flex-wrap">
       <button
         type="button"
         onClick={onBack}

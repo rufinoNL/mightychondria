@@ -1,15 +1,17 @@
+import Link from "next/link";
 import { ArticleCard } from "@/components/ui/ArticleCard";
 import { ButtonLink } from "@/components/ui/ButtonLink";
 import { Section } from "@/components/ui/Section";
+import { HumanBodySvg } from "@/components/visuals/HumanBodySvg";
 import { featuredArticles } from "@/content/articles";
 
 const topics = [
-  "Digestion",
-  "Glucose",
-  "Fat metabolism",
-  "Mitochondria",
-  "Oxygen",
-  "ATP"
+  { label: "Digestion", href: "/learn/what-happens-after-eating" },
+  { label: "Glucose", href: "/learn/how-glucose-becomes-energy" },
+  { label: "Fat metabolism", href: "/learn/how-fat-becomes-energy" },
+  { label: "Mitochondria", href: "/learn/what-are-mitochondria" },
+  { label: "Oxygen", href: "/learn/how-mitochondria-produce-atp" },
+  { label: "ATP", href: "/journey" }
 ];
 
 export default function HomePage() {
@@ -36,17 +38,16 @@ export default function HomePage() {
               </ButtonLink>
             </div>
           </div>
-          <div className="rounded-lg border border-ink/10 bg-leaf/10 p-6 shadow-soft">
-            <div className="grid h-full min-h-[280px] place-items-center rounded-lg bg-white">
-              <div className="text-center">
-                <p className="text-sm font-semibold uppercase tracking-wide text-leaf">
-                  Journey preview
-                </p>
-                <p className="mt-3 max-w-xs text-2xl font-bold text-ink">
-                  Mouth → Bloodstream → Cell → Mitochondrion → ATP
-                </p>
-              </div>
+          <div className="rounded-lg border border-ink/10 bg-leaf/10 p-4 shadow-soft">
+            <div className="mb-3 flex items-center justify-between gap-3">
+              <p className="text-sm font-semibold uppercase tracking-wide text-leaf">
+                Journey preview
+              </p>
+              <Link href="/journey" className="text-sm font-semibold text-ink hover:text-leaf">
+                Open
+              </Link>
             </div>
+            <HumanBodySvg />
           </div>
         </div>
       </section>
@@ -84,6 +85,18 @@ export default function HomePage() {
                       ? "Move nutrients and oxygen through the bloodstream."
                       : "Use mitochondrial pathways to make ATP available."}
                 </p>
+                <Link
+                  href={
+                    index === 0
+                      ? "/learn/what-happens-after-eating"
+                      : index === 1
+                        ? "/journey"
+                        : "/learn/how-mitochondria-produce-atp"
+                  }
+                  className="mt-4 inline-flex text-sm font-semibold text-leaf hover:text-ink"
+                >
+                  Explore this step
+                </Link>
               </div>
             ))}
           </div>
@@ -104,9 +117,13 @@ export default function HomePage() {
         </div>
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {topics.map((topic) => (
-            <div key={topic} className="rounded-lg border border-ink/10 bg-white p-4 text-sm font-semibold text-ink">
-              {topic}
-            </div>
+            <Link
+              key={topic.label}
+              href={topic.href}
+              className="rounded-lg border border-ink/10 bg-white p-4 text-sm font-semibold text-ink transition hover:border-leaf hover:text-leaf focus:outline-none focus:ring-2 focus:ring-leaf focus:ring-offset-2"
+            >
+              {topic.label}
+            </Link>
           ))}
         </div>
       </Section>

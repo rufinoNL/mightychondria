@@ -1,4 +1,6 @@
+import Link from "next/link";
 import type { JourneyStep, LearningMode } from "@/types/content";
+import { getArticleBySlug } from "@/content/articles";
 
 interface JourneyStagePanelProps {
   step: JourneyStep;
@@ -7,13 +9,21 @@ interface JourneyStagePanelProps {
 
 export function JourneyStagePanel({ step, mode }: JourneyStagePanelProps) {
   const copy = mode === "simple" ? step.description : step.advancedDescription;
+  const relatedArticle = step.relatedArticleSlug
+    ? getArticleBySlug(step.relatedArticleSlug)
+    : undefined;
 
   return (
     <aside className="rounded-lg border border-ink/10 bg-white p-5 shadow-sm">
-      <p className="text-sm font-semibold uppercase tracking-wide text-leaf">
-        Zoom level {step.zoomLevel}
-      </p>
-      <h2 className="mt-2 text-2xl font-bold text-ink">{step.title}</h2>
+      <div className="flex flex-wrap items-center gap-2">
+        <span className="rounded-full bg-leaf/10 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-leaf">
+          Zoom level {step.zoomLevel}
+        </span>
+        <span className="rounded-full bg-ink/5 px-3 py-1 text-xs font-semibold text-ink/65">
+          Suggested pause {step.duration}s
+        </span>
+      </div>
+      <h2 className="mt-3 text-2xl font-bold text-ink">{step.title}</h2>
       <p className="mt-4 text-base leading-7 text-ink/75">{copy}</p>
       <div className="mt-5 rounded-md border border-glucose/20 bg-glucose/10 p-4">
         <h3 className="text-sm font-semibold text-ink">Why this matters</h3>
@@ -34,6 +44,20 @@ export function JourneyStagePanel({ step, mode }: JourneyStagePanelProps) {
           ))}
         </div>
       </div>
+      {relatedArticle ? (
+        <div className="mt-5 rounded-md border border-leaf/20 bg-leaf/10 p-4">
+          <h3 className="text-sm font-semibold text-ink">Learn more</h3>
+          <Link
+            href={`/learn/${relatedArticle.slug}`}
+            className="mt-2 inline-flex text-sm font-semibold text-leaf hover:text-ink focus:outline-none focus:ring-2 focus:ring-leaf focus:ring-offset-2"
+          >
+            {relatedArticle.title}
+          </Link>
+          <p className="mt-2 text-sm leading-6 text-ink/70">
+            {relatedArticle.description}
+          </p>
+        </div>
+      ) : null}
     </aside>
   );
 }
