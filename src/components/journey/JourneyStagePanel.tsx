@@ -5,10 +5,17 @@ import { getArticleBySlug } from "@/content/articles";
 interface JourneyStagePanelProps {
   step: JourneyStep;
   mode: LearningMode;
+  selectedHotspotId?: string | null;
 }
 
-export function JourneyStagePanel({ step, mode }: JourneyStagePanelProps) {
+export function JourneyStagePanel({
+  step,
+  mode,
+  selectedHotspotId = null
+}: JourneyStagePanelProps) {
   const copy = mode === "simple" ? step.description : step.advancedDescription;
+  const hasFoundTarget =
+    Boolean(step.targetHotspotId) && selectedHotspotId === step.targetHotspotId;
   const relatedArticle = step.relatedArticleSlug
     ? getArticleBySlug(step.relatedArticleSlug)
     : undefined;
@@ -25,6 +32,27 @@ export function JourneyStagePanel({ step, mode }: JourneyStagePanelProps) {
       </div>
       <h2 className="mt-3 text-2xl font-bold text-ink">{step.title}</h2>
       <p className="mt-4 text-base leading-7 text-ink/75">{copy}</p>
+      {step.guidedPrompt ? (
+        <div
+          className={`mt-5 rounded-md border p-4 ${
+            hasFoundTarget
+              ? "border-leaf/30 bg-leaf/10"
+              : "border-oxygen/20 bg-oxygen/10"
+          }`}
+        >
+          <h3 className="text-sm font-semibold text-ink">Guided focus</h3>
+          <p className="mt-2 text-sm leading-6 text-ink/75">
+            {hasFoundTarget && step.targetHotspotSuccessMessage
+              ? step.targetHotspotSuccessMessage
+              : step.guidedPrompt}
+          </p>
+          {hasFoundTarget ? (
+            <p className="mt-2 text-xs font-semibold uppercase tracking-wide text-leaf">
+              Keep exploring any hotspot or continue when ready.
+            </p>
+          ) : null}
+        </div>
+      ) : null}
       <div className="mt-5 rounded-md border border-glucose/20 bg-glucose/10 p-4">
         <h3 className="text-sm font-semibold text-ink">Why this matters</h3>
         <p className="mt-2 text-sm leading-6 text-ink/75">

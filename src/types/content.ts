@@ -23,6 +23,9 @@ export interface JourneyStep {
   duration: number;
   keyConcepts: string[];
   relatedArticleSlug?: string;
+  guidedPrompt?: string;
+  targetHotspotId?: string;
+  targetHotspotSuccessMessage?: string;
 }
 
 export type ArticleCategory =

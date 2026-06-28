@@ -22,6 +22,7 @@ const particles: Array<{ cx: number; cy: number; fill: string }> = [
 
 interface BloodstreamSvgProps {
   metadata: VisualLayerMetadata;
+  onHotspotSelect?: (hotspotId: BloodstreamHotspotId) => void;
 }
 
 const primaryHotspotId: BloodstreamHotspotId = "cell-destination";
@@ -53,7 +54,10 @@ function renderBloodstreamHotspotMarker(
   );
 }
 
-export function BloodstreamSvg({ metadata }: BloodstreamSvgProps) {
+export function BloodstreamSvg({
+  metadata,
+  onHotspotSelect
+}: BloodstreamSvgProps) {
   const [selectedHotspotId, setSelectedHotspotId] =
     useState<BloodstreamHotspotId | null>(null);
   const selectedHotspot = selectedHotspotId
@@ -63,6 +67,11 @@ export function BloodstreamSvg({ metadata }: BloodstreamSvgProps) {
     () => bloodstreamHotspots.map((hotspot) => hotspot.shortLabel).join(", "),
     []
   );
+
+  function selectHotspot(hotspotId: BloodstreamHotspotId) {
+    setSelectedHotspotId(hotspotId);
+    onHotspotSelect?.(hotspotId);
+  }
 
   return (
     <VisualFrame
@@ -156,7 +165,7 @@ export function BloodstreamSvg({ metadata }: BloodstreamSvgProps) {
       <SvgHotspot
         label={bloodstreamHotspotById["blood-vessel"].label}
         isSelected={selectedHotspotId === "blood-vessel"}
-        onSelect={() => setSelectedHotspotId("blood-vessel")}
+        onSelect={() => selectHotspot("blood-vessel")}
         marker={renderBloodstreamHotspotMarker(232, 96, false)}
         focusRing={
           <rect
@@ -205,7 +214,7 @@ export function BloodstreamSvg({ metadata }: BloodstreamSvgProps) {
       <SvgHotspot
         label={bloodstreamHotspotById["nutrient-particles"].label}
         isSelected={selectedHotspotId === "nutrient-particles"}
-        onSelect={() => setSelectedHotspotId("nutrient-particles")}
+        onSelect={() => selectHotspot("nutrient-particles")}
         marker={renderBloodstreamHotspotMarker(144, 160, false)}
         focusRing={
           <ellipse
@@ -237,7 +246,7 @@ export function BloodstreamSvg({ metadata }: BloodstreamSvgProps) {
       <SvgHotspot
         label={bloodstreamHotspotById["oxygen-particles"].label}
         isSelected={selectedHotspotId === "oxygen-particles"}
-        onSelect={() => setSelectedHotspotId("oxygen-particles")}
+        onSelect={() => selectHotspot("oxygen-particles")}
         marker={renderBloodstreamHotspotMarker(260, 166, false)}
         focusRing={
           <circle
@@ -267,7 +276,7 @@ export function BloodstreamSvg({ metadata }: BloodstreamSvgProps) {
       <SvgHotspot
         label={bloodstreamHotspotById["cell-destination"].label}
         isSelected={selectedHotspotId === "cell-destination"}
-        onSelect={() => setSelectedHotspotId("cell-destination")}
+        onSelect={() => selectHotspot("cell-destination")}
         marker={renderBloodstreamHotspotMarker(
           318,
           146,

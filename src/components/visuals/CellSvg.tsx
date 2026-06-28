@@ -10,6 +10,7 @@ import type { VisualLayerMetadata } from "./visualLayers";
 
 interface CellSvgProps {
   metadata: VisualLayerMetadata;
+  onHotspotSelect?: (hotspotId: CellHotspotId) => void;
 }
 
 const primaryHotspotId: CellHotspotId = "nutrient-transporter";
@@ -41,7 +42,7 @@ function renderCellHotspotMarker(
   );
 }
 
-export function CellSvg({ metadata }: CellSvgProps) {
+export function CellSvg({ metadata, onHotspotSelect }: CellSvgProps) {
   const [selectedHotspotId, setSelectedHotspotId] =
     useState<CellHotspotId | null>(null);
   const selectedHotspot = selectedHotspotId
@@ -51,6 +52,11 @@ export function CellSvg({ metadata }: CellSvgProps) {
     () => cellHotspots.map((hotspot) => hotspot.shortLabel).join(", "),
     []
   );
+
+  function selectHotspot(hotspotId: CellHotspotId) {
+    setSelectedHotspotId(hotspotId);
+    onHotspotSelect?.(hotspotId);
+  }
 
   return (
     <VisualFrame
@@ -131,7 +137,7 @@ export function CellSvg({ metadata }: CellSvgProps) {
       <SvgHotspot
         label={cellHotspotById["cell-membrane"].label}
         isSelected={selectedHotspotId === "cell-membrane"}
-        onSelect={() => setSelectedHotspotId("cell-membrane")}
+        onSelect={() => selectHotspot("cell-membrane")}
         marker={renderCellHotspotMarker(92, 170, false)}
         focusRing={
           <ellipse
@@ -171,7 +177,7 @@ export function CellSvg({ metadata }: CellSvgProps) {
       <SvgHotspot
         label={cellHotspotById["nutrient-transporter"].label}
         isSelected={selectedHotspotId === "nutrient-transporter"}
-        onSelect={() => setSelectedHotspotId("nutrient-transporter")}
+        onSelect={() => selectHotspot("nutrient-transporter")}
         marker={renderCellHotspotMarker(
           154,
           124,
@@ -212,7 +218,7 @@ export function CellSvg({ metadata }: CellSvgProps) {
       <SvgHotspot
         label={cellHotspotById.cytoplasm.label}
         isSelected={selectedHotspotId === "cytoplasm"}
-        onSelect={() => setSelectedHotspotId("cytoplasm")}
+        onSelect={() => selectHotspot("cytoplasm")}
         marker={renderCellHotspotMarker(226, 112, false)}
         focusRing={
           <ellipse
@@ -244,7 +250,7 @@ export function CellSvg({ metadata }: CellSvgProps) {
       <SvgHotspot
         label={cellHotspotById.nucleus.label}
         isSelected={selectedHotspotId === "nucleus"}
-        onSelect={() => setSelectedHotspotId("nucleus")}
+        onSelect={() => selectHotspot("nucleus")}
         marker={renderCellHotspotMarker(184, 138, false)}
         focusRing={
           <circle
@@ -274,7 +280,7 @@ export function CellSvg({ metadata }: CellSvgProps) {
       <SvgHotspot
         label={cellHotspotById.mitochondrion.label}
         isSelected={selectedHotspotId === "mitochondrion"}
-        onSelect={() => setSelectedHotspotId("mitochondrion")}
+        onSelect={() => selectHotspot("mitochondrion")}
         marker={renderCellHotspotMarker(286, 154, false)}
         focusRing={
           <circle

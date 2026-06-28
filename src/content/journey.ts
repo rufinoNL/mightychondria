@@ -14,7 +14,12 @@ export const journeySteps: JourneyStep[] = [
     zoomLevel: 2,
     duration: 8,
     keyConcepts: ["chewing", "saliva", "surface area", "amylase"],
-    relatedArticleSlug: "what-happens-after-eating"
+    relatedArticleSlug: "what-happens-after-eating",
+    guidedPrompt:
+      "Look for the first structure that physically breaks food down before it travels deeper.",
+    targetHotspotId: "mouth",
+    targetHotspotSuccessMessage:
+      "You found the starting point: chewing and saliva prepare food for the rest of digestion."
   },
   {
     id: "esophagus",
@@ -29,7 +34,12 @@ export const journeySteps: JourneyStep[] = [
     zoomLevel: 2,
     duration: 6,
     keyConcepts: ["peristalsis", "transport", "bolus", "smooth muscle"],
-    relatedArticleSlug: "what-happens-after-eating"
+    relatedArticleSlug: "what-happens-after-eating",
+    guidedPrompt:
+      "Find the transport path that moves the swallowed bolus toward the stomach.",
+    targetHotspotId: "esophagus",
+    targetHotspotSuccessMessage:
+      "You found the esophagus: coordinated muscle waves keep food moving to the next compartment."
   },
   {
     id: "stomach",
@@ -44,7 +54,12 @@ export const journeySteps: JourneyStep[] = [
     zoomLevel: 2,
     duration: 10,
     keyConcepts: ["acid", "pepsin", "chyme", "controlled release"],
-    relatedArticleSlug: "what-happens-after-eating"
+    relatedArticleSlug: "what-happens-after-eating",
+    guidedPrompt:
+      "Select the organ that stores, churns, and mixes food with acid and enzymes.",
+    targetHotspotId: "stomach",
+    targetHotspotSuccessMessage:
+      "You found the stomach: it turns the meal into chyme and releases it gradually."
   },
   {
     id: "small-intestine",
@@ -59,7 +74,12 @@ export const journeySteps: JourneyStep[] = [
     zoomLevel: 2,
     duration: 12,
     keyConcepts: ["glucose", "fatty acids", "amino acids", "villi", "absorption"],
-    relatedArticleSlug: "what-happens-after-eating"
+    relatedArticleSlug: "what-happens-after-eating",
+    guidedPrompt:
+      "Find the absorptive area where digested nutrients cross into the body.",
+    targetHotspotId: "villi",
+    targetHotspotSuccessMessage:
+      "You found the villi area: its large surface helps nutrients enter circulation efficiently."
   },
   {
     id: "bloodstream",
@@ -74,7 +94,12 @@ export const journeySteps: JourneyStep[] = [
     zoomLevel: 3,
     duration: 10,
     keyConcepts: ["circulation", "nutrient delivery", "oxygen", "hemoglobin"],
-    relatedArticleSlug: "what-happens-after-eating"
+    relatedArticleSlug: "what-happens-after-eating",
+    guidedPrompt:
+      "Select the destination where delivered nutrients and oxygen are headed.",
+    targetHotspotId: "cell-destination",
+    targetHotspotSuccessMessage:
+      "You found the destination cell: circulation is delivering the materials cells need for energy work."
   },
   {
     id: "cell",
@@ -89,7 +114,12 @@ export const journeySteps: JourneyStep[] = [
     zoomLevel: 4,
     duration: 10,
     keyConcepts: ["cell membrane", "transporters", "glycolysis", "metabolic intermediates"],
-    relatedArticleSlug: "how-glucose-becomes-energy"
+    relatedArticleSlug: "how-glucose-becomes-energy",
+    guidedPrompt:
+      "Find the entry point that helps useful nutrients cross into the cell.",
+    targetHotspotId: "nutrient-transporter",
+    targetHotspotSuccessMessage:
+      "You found the nutrient transporter: cells need controlled entry before nutrients can be processed."
   },
   {
     id: "mitochondrion",

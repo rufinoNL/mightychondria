@@ -10,26 +10,56 @@ import { getVisualLayerMetadata } from "./visualLayers";
 
 interface JourneyVisualProps {
   type: JourneyVisualType;
+  onHotspotSelect?: (hotspotId: string | null) => void;
 }
 
-export function JourneyVisual({ type }: JourneyVisualProps) {
+export function JourneyVisual({ type, onHotspotSelect }: JourneyVisualProps) {
   const metadata = getVisualLayerMetadata(type);
 
   switch (type) {
     case "human-body":
       return <HumanBodySvg metadata={metadata} />;
     case "mouth":
-      return <DigestiveSystemSvg stage="mouth" metadata={metadata} />;
+      return (
+        <DigestiveSystemSvg
+          stage="mouth"
+          metadata={metadata}
+          onHotspotSelect={onHotspotSelect}
+        />
+      );
     case "esophagus":
-      return <DigestiveSystemSvg stage="esophagus" metadata={metadata} />;
+      return (
+        <DigestiveSystemSvg
+          stage="esophagus"
+          metadata={metadata}
+          onHotspotSelect={onHotspotSelect}
+        />
+      );
     case "stomach":
-      return <DigestiveSystemSvg stage="stomach" metadata={metadata} />;
+      return (
+        <DigestiveSystemSvg
+          stage="stomach"
+          metadata={metadata}
+          onHotspotSelect={onHotspotSelect}
+        />
+      );
     case "small-intestine":
-      return <DigestiveSystemSvg stage="small-intestine" metadata={metadata} />;
+      return (
+        <DigestiveSystemSvg
+          stage="small-intestine"
+          metadata={metadata}
+          onHotspotSelect={onHotspotSelect}
+        />
+      );
     case "bloodstream":
-      return <BloodstreamSvg metadata={metadata} />;
+      return (
+        <BloodstreamSvg
+          metadata={metadata}
+          onHotspotSelect={onHotspotSelect}
+        />
+      );
     case "cell":
-      return <CellSvg metadata={metadata} />;
+      return <CellSvg metadata={metadata} onHotspotSelect={onHotspotSelect} />;
     case "mitochondrion":
       return <MitochondrionSvg metadata={metadata} />;
     case "electron-transport-chain":

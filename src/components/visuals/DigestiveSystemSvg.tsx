@@ -16,6 +16,7 @@ type DigestiveStage = "mouth" | "esophagus" | "stomach" | "small-intestine";
 interface DigestiveSystemSvgProps {
   stage: DigestiveStage;
   metadata: VisualLayerMetadata;
+  onHotspotSelect?: (hotspotId: DigestiveHotspotId | null) => void;
 }
 
 const stageCopy: Record<DigestiveStage, string> = {
@@ -58,7 +59,8 @@ function renderHotspotMarker(cx: number, cy: number, isCurrentStage: boolean) {
 
 export function DigestiveSystemSvg({
   stage,
-  metadata
+  metadata,
+  onHotspotSelect
 }: DigestiveSystemSvgProps) {
   const [selectedHotspotId, setSelectedHotspotId] =
     useState<DigestiveHotspotId | null>(null);
@@ -80,7 +82,13 @@ export function DigestiveSystemSvg({
 
   useEffect(() => {
     setSelectedHotspotId(null);
-  }, [stage]);
+    onHotspotSelect?.(null);
+  }, [stage, onHotspotSelect]);
+
+  function selectHotspot(hotspotId: DigestiveHotspotId) {
+    setSelectedHotspotId(hotspotId);
+    onHotspotSelect?.(hotspotId);
+  }
 
   return (
     <VisualFrame
@@ -216,7 +224,7 @@ export function DigestiveSystemSvg({
       <SvgHotspot
         label={digestiveHotspotById.mouth.label}
         isSelected={selectedHotspotId === "mouth"}
-        onSelect={() => setSelectedHotspotId("mouth")}
+        onSelect={() => selectHotspot("mouth")}
         marker={renderHotspotMarker(118, 60, currentStageHotspotId === "mouth")}
         focusRing={
           <circle
@@ -246,7 +254,7 @@ export function DigestiveSystemSvg({
       <SvgHotspot
         label={digestiveHotspotById.esophagus.label}
         isSelected={selectedHotspotId === "esophagus"}
-        onSelect={() => setSelectedHotspotId("esophagus")}
+        onSelect={() => selectHotspot("esophagus")}
         marker={renderHotspotMarker(
           180,
           106,
@@ -286,7 +294,7 @@ export function DigestiveSystemSvg({
       <SvgHotspot
         label={digestiveHotspotById.stomach.label}
         isSelected={selectedHotspotId === "stomach"}
-        onSelect={() => setSelectedHotspotId("stomach")}
+        onSelect={() => selectHotspot("stomach")}
         marker={renderHotspotMarker(
           236,
           154,
@@ -326,7 +334,7 @@ export function DigestiveSystemSvg({
       <SvgHotspot
         label={digestiveHotspotById["small-intestine"].label}
         isSelected={selectedHotspotId === "small-intestine"}
-        onSelect={() => setSelectedHotspotId("small-intestine")}
+        onSelect={() => selectHotspot("small-intestine")}
         marker={renderHotspotMarker(
           185,
           232,
@@ -367,7 +375,7 @@ export function DigestiveSystemSvg({
       <SvgHotspot
         label={digestiveHotspotById.villi.label}
         isSelected={selectedHotspotId === "villi"}
-        onSelect={() => setSelectedHotspotId("villi")}
+        onSelect={() => selectHotspot("villi")}
         marker={renderHotspotMarker(232, 206, false)}
         focusRing={
           <circle

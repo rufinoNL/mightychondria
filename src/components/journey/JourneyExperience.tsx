@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import type { Article, JourneyStep, LearningMode } from "@/types/content";
 import { JourneyVisual } from "@/components/visuals/JourneyVisual";
 import { getArticleBySlug } from "@/content/articles";
@@ -19,6 +19,9 @@ export function JourneyExperience({ steps }: JourneyExperienceProps) {
   const [learningMode, setLearningMode] = useState<LearningMode>("simple");
   const [hasStarted, setHasStarted] = useState(false);
   const [isComplete, setIsComplete] = useState(false);
+  const [selectedHotspotId, setSelectedHotspotId] = useState<string | null>(
+    null
+  );
 
   const activeStep = steps[activeStepIndex];
   const totalSteps = steps.length;
@@ -51,23 +54,27 @@ export function JourneyExperience({ steps }: JourneyExperienceProps) {
 
   function goBack() {
     setIsComplete(false);
+    setSelectedHotspotId(null);
     setActiveStepIndex((index) => Math.max(0, index - 1));
   }
 
   function startJourney() {
     setHasStarted(true);
     setIsComplete(false);
+    setSelectedHotspotId(null);
     setActiveStepIndex(0);
   }
 
   function goToStep(index: number) {
     setHasStarted(true);
     setIsComplete(false);
+    setSelectedHotspotId(null);
     setActiveStepIndex(Math.max(0, Math.min(totalSteps - 1, index)));
   }
 
   function goNext() {
     setHasStarted(true);
+    setSelectedHotspotId(null);
 
     if (isLastStep) {
       setIsComplete(true);
@@ -81,8 +88,13 @@ export function JourneyExperience({ steps }: JourneyExperienceProps) {
     setActiveStepIndex(0);
     setHasStarted(false);
     setIsComplete(false);
+    setSelectedHotspotId(null);
     setLearningMode("simple");
   }
+
+  const handleHotspotSelect = useCallback((hotspotId: string | null) => {
+    setSelectedHotspotId(hotspotId);
+  }, []);
 
   if (!activeStep) {
     return (
@@ -247,7 +259,10 @@ export function JourneyExperience({ steps }: JourneyExperienceProps) {
               </div>
             </div>
           ) : (
-            <JourneyVisual type={activeStep.visualType} />
+            <JourneyVisual
+              type={activeStep.visualType}
+              onHotspotSelect={handleHotspotSelect}
+            />
           )}
         </div>
       </div>
@@ -280,7 +295,11 @@ export function JourneyExperience({ steps }: JourneyExperienceProps) {
             </div>
           </div>
         ) : !isComplete ? (
-          <JourneyStagePanel step={activeStep} mode={learningMode} />
+          <JourneyStagePanel
+            step={activeStep}
+            mode={learningMode}
+            selectedHotspotId={selectedHotspotId}
+          />
         ) : (
           <div className="rounded-lg border border-ink/10 bg-white p-5 shadow-sm">
             <h2 className="text-2xl font-bold text-ink">Key takeaway</h2>
