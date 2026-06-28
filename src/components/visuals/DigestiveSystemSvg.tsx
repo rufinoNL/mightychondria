@@ -33,6 +33,29 @@ function isActive(stage: DigestiveStage, target: DigestiveStage) {
   return stage === target;
 }
 
+function renderHotspotMarker(cx: number, cy: number, isCurrentStage: boolean) {
+  return (
+    <>
+      <circle
+        cx={cx}
+        cy={cy}
+        r={isCurrentStage ? "11" : "8"}
+        fill={isCurrentStage ? "#1f7a5a" : "#ffffff"}
+        stroke={isCurrentStage ? "#ffffff" : "#1f7a5a"}
+        strokeWidth="2.5"
+        opacity={isCurrentStage ? "0.96" : "0.82"}
+      />
+      <circle
+        cx={cx}
+        cy={cy}
+        r={isCurrentStage ? "4" : "3"}
+        fill={isCurrentStage ? "#ffffff" : "#1f7a5a"}
+        opacity="0.95"
+      />
+    </>
+  );
+}
+
 export function DigestiveSystemSvg({
   stage,
   metadata
@@ -43,6 +66,7 @@ export function DigestiveSystemSvg({
   const isEsophagus = stage === "esophagus";
   const isStomach = stage === "stomach";
   const isIntestine = stage === "small-intestine";
+  const currentStageHotspotId: DigestiveHotspotId = stage;
   const selectedHotspot = selectedHotspotId
     ? digestiveHotspotById[selectedHotspotId]
     : null;
@@ -63,6 +87,7 @@ export function DigestiveSystemSvg({
       title={stageCopy[stage]}
       metadata={metadata}
       interactive
+      detailActive={Boolean(selectedHotspot)}
       detail={
         selectedHotspot ? (
           <div aria-live="polite">
@@ -192,15 +217,27 @@ export function DigestiveSystemSvg({
         label={digestiveHotspotById.mouth.label}
         isSelected={selectedHotspotId === "mouth"}
         onSelect={() => setSelectedHotspotId("mouth")}
+        marker={renderHotspotMarker(118, 60, currentStageHotspotId === "mouth")}
         focusRing={
+          <circle
+            cx="118"
+            cy="60"
+            r="52"
+            fill="none"
+            stroke="#2878b8"
+            strokeWidth="3"
+            strokeDasharray="2 6"
+          />
+        }
+        selectedRing={
           <circle
             cx="118"
             cy="60"
             r="45"
             fill="none"
-            stroke="#17211d"
+            stroke={activeColor}
             strokeWidth="3"
-            strokeDasharray="5 5"
+            strokeDasharray="7 5"
           />
         }
       >
@@ -210,15 +247,31 @@ export function DigestiveSystemSvg({
         label={digestiveHotspotById.esophagus.label}
         isSelected={selectedHotspotId === "esophagus"}
         onSelect={() => setSelectedHotspotId("esophagus")}
+        marker={renderHotspotMarker(
+          180,
+          106,
+          currentStageHotspotId === "esophagus"
+        )}
         focusRing={
+          <circle
+            cx="180"
+            cy="106"
+            r="46"
+            fill="none"
+            stroke="#2878b8"
+            strokeWidth="3"
+            strokeDasharray="2 6"
+          />
+        }
+        selectedRing={
           <circle
             cx="180"
             cy="106"
             r="39"
             fill="none"
-            stroke="#17211d"
+            stroke={activeColor}
             strokeWidth="3"
-            strokeDasharray="5 5"
+            strokeDasharray="7 5"
           />
         }
       >
@@ -234,15 +287,31 @@ export function DigestiveSystemSvg({
         label={digestiveHotspotById.stomach.label}
         isSelected={selectedHotspotId === "stomach"}
         onSelect={() => setSelectedHotspotId("stomach")}
+        marker={renderHotspotMarker(
+          236,
+          154,
+          currentStageHotspotId === "stomach"
+        )}
         focusRing={
+          <circle
+            cx="212"
+            cy="166"
+            r="82"
+            fill="none"
+            stroke="#2878b8"
+            strokeWidth="3"
+            strokeDasharray="2 6"
+          />
+        }
+        selectedRing={
           <circle
             cx="212"
             cy="166"
             r="74"
             fill="none"
-            stroke="#17211d"
+            stroke={activeColor}
             strokeWidth="3"
-            strokeDasharray="5 5"
+            strokeDasharray="7 5"
           />
         }
       >
@@ -258,15 +327,31 @@ export function DigestiveSystemSvg({
         label={digestiveHotspotById["small-intestine"].label}
         isSelected={selectedHotspotId === "small-intestine"}
         onSelect={() => setSelectedHotspotId("small-intestine")}
+        marker={renderHotspotMarker(
+          185,
+          232,
+          currentStageHotspotId === "small-intestine"
+        )}
         focusRing={
+          <circle
+            cx="212"
+            cy="226"
+            r="91"
+            fill="none"
+            stroke="#2878b8"
+            strokeWidth="3"
+            strokeDasharray="2 6"
+          />
+        }
+        selectedRing={
           <circle
             cx="212"
             cy="226"
             r="83"
             fill="none"
-            stroke="#17211d"
+            stroke={activeColor}
             strokeWidth="3"
-            strokeDasharray="5 5"
+            strokeDasharray="7 5"
           />
         }
       >
@@ -283,15 +368,27 @@ export function DigestiveSystemSvg({
         label={digestiveHotspotById.villi.label}
         isSelected={selectedHotspotId === "villi"}
         onSelect={() => setSelectedHotspotId("villi")}
+        marker={renderHotspotMarker(232, 206, false)}
         focusRing={
+          <circle
+            cx="210"
+            cy="211"
+            r="70"
+            fill="none"
+            stroke="#2878b8"
+            strokeWidth="3"
+            strokeDasharray="2 6"
+          />
+        }
+        selectedRing={
           <circle
             cx="210"
             cy="211"
             r="62"
             fill="none"
-            stroke="#17211d"
+            stroke={activeColor}
             strokeWidth="3"
-            strokeDasharray="5 5"
+            strokeDasharray="7 5"
           />
         }
       >

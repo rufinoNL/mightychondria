@@ -6,6 +6,7 @@ interface VisualFrameProps {
   metadata: VisualLayerMetadata;
   children: ReactNode;
   detail?: ReactNode;
+  detailActive?: boolean;
   interactive?: boolean;
 }
 
@@ -14,6 +15,7 @@ export function VisualFrame({
   metadata,
   children,
   detail,
+  detailActive = false,
   interactive = false
 }: VisualFrameProps) {
   return (
@@ -81,7 +83,13 @@ export function VisualFrame({
           {children}
         </svg>
         {detail ? (
-          <div className="mt-4 rounded-md border border-leaf/20 bg-white/90 p-3 text-sm leading-6 text-ink/75 shadow-sm">
+          <div
+            className={`mt-4 rounded-md border p-3 text-sm leading-6 text-ink/75 shadow-sm ${
+              detailActive
+                ? "border-leaf/40 bg-white ring-2 ring-leaf/10"
+                : "border-leaf/20 bg-white/90"
+            }`}
+          >
             {detail}
           </div>
         ) : null}
