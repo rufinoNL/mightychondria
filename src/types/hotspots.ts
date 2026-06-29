@@ -38,3 +38,18 @@ export interface BloodstreamHotspot {
   shortLabel: string;
   explanation: string;
 }
+
+export type MitochondrionHotspotId =
+  | "outer-membrane"
+  | "inner-membrane"
+  | "cristae"
+  | "matrix"
+  | "electron-carriers"
+  | "etc-zoom-target";
+
+export interface MitochondrionHotspot {
+  id: MitochondrionHotspotId;
+  label: string;
+  shortLabel: string;
+  explanation: string;
+}

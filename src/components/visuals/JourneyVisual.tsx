@@ -61,7 +61,12 @@ export function JourneyVisual({ type, onHotspotSelect }: JourneyVisualProps) {
     case "cell":
       return <CellSvg metadata={metadata} onHotspotSelect={onHotspotSelect} />;
     case "mitochondrion":
-      return <MitochondrionSvg metadata={metadata} />;
+      return (
+        <MitochondrionSvg
+          metadata={metadata}
+          onHotspotSelect={onHotspotSelect}
+        />
+      );
     case "electron-transport-chain":
       return <ElectronTransportChainSvg metadata={metadata} />;
     case "atp-production":

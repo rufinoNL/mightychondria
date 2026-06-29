@@ -134,7 +134,12 @@ export const journeySteps: JourneyStep[] = [
     zoomLevel: 5,
     duration: 12,
     keyConcepts: ["matrix", "cristae", "NADH", "FADH2", "inner membrane"],
-    relatedArticleSlug: "what-are-mitochondria"
+    relatedArticleSlug: "what-are-mitochondria",
+    guidedPrompt:
+      "Find the inner membrane area where the journey will zoom next into electron transport.",
+    targetHotspotId: "etc-zoom-target",
+    targetHotspotSuccessMessage:
+      "You found the ETC zoom target: the next stage focuses on electron flow across the inner membrane."
   },
   {
     id: "electron-transport-chain",

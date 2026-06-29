@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { JourneyStep, LearningMode } from "@/types/content";
 import { getArticleBySlug } from "@/content/articles";
+import { EnergyPathPanel } from "./EnergyPathPanel";
 
 interface JourneyStagePanelProps {
   step: JourneyStep;
@@ -34,6 +35,7 @@ export function JourneyStagePanel({
       <p className="mt-4 text-base leading-7 text-ink/75">{copy}</p>
       {step.guidedPrompt ? (
         <div
+          aria-live="polite"
           className={`mt-5 rounded-md border p-4 ${
             hasFoundTarget
               ? "border-leaf/30 bg-leaf/10"
@@ -53,6 +55,7 @@ export function JourneyStagePanel({
           ) : null}
         </div>
       ) : null}
+      <EnergyPathPanel activeStepId={step.id} />
       <div className="mt-5 rounded-md border border-glucose/20 bg-glucose/10 p-4">
         <h3 className="text-sm font-semibold text-ink">Why this matters</h3>
         <p className="mt-2 text-sm leading-6 text-ink/75">
