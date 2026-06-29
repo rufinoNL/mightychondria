@@ -9,10 +9,108 @@ interface ATPProductionSvgProps {
 export function ATPProductionSvg({ metadata }: ATPProductionSvgProps) {
   return (
     <VisualFrame title="ATP synthase uses the gradient to produce ATP" metadata={metadata}>
+      <style>
+        {`
+          .atp-proton-flow {
+            transform-box: fill-box;
+            transform-origin: center;
+            animation: atp-proton-through-synthase 4.8s ease-in-out infinite;
+          }
+
+          .atp-proton-flow-2 {
+            animation-delay: 1.4s;
+          }
+
+          .atp-proton-flow-3 {
+            animation-delay: 2.8s;
+          }
+
+          .atp-output-emphasis {
+            transform-box: fill-box;
+            transform-origin: center;
+            animation: atp-output-breathe 4.8s ease-in-out infinite;
+          }
+
+          @keyframes atp-proton-through-synthase {
+            0% {
+              opacity: 0.2;
+              transform: translateY(48px) scale(0.86);
+            }
+            24% {
+              opacity: 0.95;
+            }
+            78% {
+              opacity: 0.95;
+            }
+            100% {
+              opacity: 0.2;
+              transform: translateY(-42px) scale(0.86);
+            }
+          }
+
+          @keyframes atp-output-breathe {
+            0%,
+            100% {
+              opacity: 0.24;
+              transform: scale(0.94);
+            }
+            50% {
+              opacity: 0.48;
+              transform: scale(1.04);
+            }
+          }
+
+          @media (prefers-reduced-motion: reduce) {
+            .atp-proton-flow,
+            .atp-output-emphasis {
+              animation: none;
+              opacity: 0.9;
+              transform: none;
+            }
+          }
+        `}
+      </style>
       <rect x="58" y="142" width="284" height="44" rx="22" fill="#f2dfcf" opacity="0.96" />
       <rect x="70" y="154" width="260" height="20" rx="10" fill="#fff4e8" opacity="0.75" />
       <rect x="176" y="100" width="48" height="112" rx="18" fill="#1f7a5a" />
       <rect x="188" y="122" width="24" height="70" rx="10" fill="#f8fbff" opacity="0.14" />
+      <g aria-hidden="true">
+        <circle
+          className="atp-proton-flow"
+          cx="192"
+          cy="164"
+          r="5"
+          fill="#fff7ed"
+          stroke="#d89216"
+          strokeWidth="2"
+        />
+        <circle
+          className="atp-proton-flow atp-proton-flow-2"
+          cx="200"
+          cy="172"
+          r="5"
+          fill="#fff7ed"
+          stroke="#d89216"
+          strokeWidth="2"
+        />
+        <circle
+          className="atp-proton-flow atp-proton-flow-3"
+          cx="208"
+          cy="164"
+          r="5"
+          fill="#fff7ed"
+          stroke="#d89216"
+          strokeWidth="2"
+        />
+      </g>
+      <circle
+        className="atp-output-emphasis"
+        cx="200"
+        cy="80"
+        r="43"
+        fill="#1f7a5a"
+        opacity="0.24"
+      />
       <circle cx="200" cy="80" r="34" fill="#1f7a5a" />
       <circle cx="200" cy="80" r="24" fill="#f8fbff" opacity="0.12" />
       <text x="200" y="85" textAnchor="middle" className="fill-white text-sm font-bold">
