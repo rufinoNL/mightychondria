@@ -28,6 +28,29 @@ export interface JourneyStep {
   targetHotspotSuccessMessage?: string;
 }
 
+export type PhysiologyDomain =
+  | "digestion"
+  | "blood-glucose"
+  | "sleep"
+  | "oxygen"
+  | "mitochondria"
+  | "atp";
+
+export interface SimulationRecipeStage extends JourneyStep {
+  id: JourneyVisualType;
+}
+
+export interface SimulationRecipe {
+  id: string;
+  title: string;
+  summary: string;
+  questionExamples: string[];
+  domains: PhysiologyDomain[];
+  assumptions: string[];
+  limitations: string[];
+  stages: SimulationRecipeStage[];
+}
+
 export type ArticleCategory =
   | "Nutrition"
   | "Metabolism"

@@ -2,19 +2,29 @@
 
 import Link from "next/link";
 import { useCallback, useMemo, useState } from "react";
-import type { Article, JourneyStep, LearningMode } from "@/types/content";
+import type {
+  Article,
+  JourneyStep,
+  LearningMode,
+  SimulationRecipe
+} from "@/types/content";
 import { JourneyVisual } from "@/components/visuals/JourneyVisual";
 import { getArticleBySlug } from "@/content/articles";
 import { JourneyControls } from "./JourneyControls";
 import { JourneyProgress } from "./JourneyProgress";
 import { JourneyStagePanel } from "./JourneyStagePanel";
 import { LearningModeToggle } from "./LearningModeToggle";
+import { SimulationRecipePicker } from "./SimulationRecipePicker";
 
 interface JourneyExperienceProps {
   steps: JourneyStep[];
+  recipes?: SimulationRecipe[];
 }
 
-export function JourneyExperience({ steps }: JourneyExperienceProps) {
+export function JourneyExperience({
+  steps,
+  recipes = []
+}: JourneyExperienceProps) {
   const [activeStepIndex, setActiveStepIndex] = useState(0);
   const [learningMode, setLearningMode] = useState<LearningMode>("simple");
   const [hasStarted, setHasStarted] = useState(false);
@@ -22,9 +32,13 @@ export function JourneyExperience({ steps }: JourneyExperienceProps) {
   const [selectedHotspotId, setSelectedHotspotId] = useState<string | null>(
     null
   );
+  const [selectedRecipeId, setSelectedRecipeId] = useState<string | null>(null);
 
-  const activeStep = steps[activeStepIndex];
-  const totalSteps = steps.length;
+  const selectedRecipe =
+    recipes.find((recipe) => recipe.id === selectedRecipeId) ?? null;
+  const activeSteps: JourneyStep[] = selectedRecipe?.stages ?? steps;
+  const activeStep = activeSteps[activeStepIndex];
+  const totalSteps = activeSteps.length;
   const isLastStep = activeStepIndex === totalSteps - 1;
   const compactStageLabels: Record<string, string> = {
     "small-intestine": "Intestine",
@@ -40,9 +54,9 @@ export function JourneyExperience({ steps }: JourneyExperienceProps) {
     ],
     []
   );
-  const relatedArticles = useMemo(() => {
+  const activeRelatedArticles = useMemo(() => {
     const slugs = new Set(
-      steps
+      activeSteps
         .map((step) => step.relatedArticleSlug)
         .filter((slug): slug is string => Boolean(slug))
     );
@@ -50,7 +64,7 @@ export function JourneyExperience({ steps }: JourneyExperienceProps) {
     return Array.from(slugs)
       .map((slug) => getArticleBySlug(slug))
       .filter((article): article is Article => Boolean(article));
-  }, [steps]);
+  }, [activeSteps]);
 
   function goBack() {
     setIsComplete(false);
@@ -92,6 +106,14 @@ export function JourneyExperience({ steps }: JourneyExperienceProps) {
     setLearningMode("simple");
   }
 
+  function selectRecipe(recipeId: string | null) {
+    setSelectedRecipeId(recipeId);
+    setActiveStepIndex(0);
+    setHasStarted(false);
+    setIsComplete(false);
+    setSelectedHotspotId(null);
+  }
+
   const handleHotspotSelect = useCallback((hotspotId: string | null) => {
     setSelectedHotspotId(hotspotId);
   }, []);
@@ -126,7 +148,7 @@ export function JourneyExperience({ steps }: JourneyExperienceProps) {
               className="flex max-w-full gap-2 overflow-x-auto px-1 py-1 text-xs font-medium text-ink/60 md:grid md:grid-cols-9 md:overflow-visible"
               aria-label="Journey stages"
             >
-              {steps.map((step, index) => {
+              {activeSteps.map((step, index) => {
                 const isActive =
                   hasStarted && !isComplete && index === activeStepIndex;
                 const isVisited =
@@ -165,15 +187,19 @@ export function JourneyExperience({ steps }: JourneyExperienceProps) {
             <div className="grid min-h-[360px] place-items-center rounded-lg bg-[linear-gradient(135deg,#e9f7f1_0%,#f8fbff_55%,#fff7ed_100%)] p-6 text-center sm:min-h-[440px] sm:p-8">
               <div className="max-w-2xl">
                 <p className="text-sm font-semibold uppercase tracking-wide text-leaf">
-                  Interactive ATP journey
+                  {selectedRecipe
+                    ? "Curated simulation"
+                    : "Interactive ATP journey"}
                 </p>
                 <h2 className="mt-3 text-3xl font-bold text-ink">
-                  Trace one meal into cellular ATP.
+                  {selectedRecipe
+                    ? selectedRecipe.title
+                    : "Trace one meal into cellular ATP."}
                 </h2>
                 <p className="mt-4 text-base leading-7 text-ink/75">
-                  Move through {totalSteps} stages, from the first bite to
-                  ATP synthase. Switch between simple and advanced explanations
-                  at any point.
+                  {selectedRecipe
+                    ? selectedRecipe.summary
+                    : `Move through ${totalSteps} stages, from the first bite to ATP synthase. Switch between simple and advanced explanations at any point.`}
                 </p>
                 <div className="mt-6 grid gap-3 text-left sm:grid-cols-3">
                   <div className="rounded-md bg-white/80 p-3">
@@ -224,13 +250,13 @@ export function JourneyExperience({ steps }: JourneyExperienceProps) {
                   </li>
                 ))}
               </ul>
-              {relatedArticles.length > 0 ? (
+              {activeRelatedArticles.length > 0 ? (
                 <div className="mt-6">
                   <h3 className="text-sm font-semibold uppercase tracking-wide text-ink/70">
                     Keep exploring
                   </h3>
                   <div className="mt-3 grid gap-2 sm:grid-cols-3">
-                    {relatedArticles.slice(0, 3).map((article) => (
+                    {activeRelatedArticles.slice(0, 3).map((article) => (
                       <Link
                         key={article.slug}
                         href={`/learn/${article.slug}`}
@@ -272,28 +298,37 @@ export function JourneyExperience({ steps }: JourneyExperienceProps) {
           <LearningModeToggle value={learningMode} onChange={setLearningMode} />
         </div>
         {!hasStarted ? (
-          <div className="rounded-lg border border-ink/10 bg-white p-5 shadow-sm">
-            <h2 className="text-2xl font-bold text-ink">What you will learn</h2>
-            <p className="mt-4 text-base leading-7 text-ink/75">
-              This journey connects everyday food choices to the cellular
-              chemistry that powers movement, repair, temperature regulation,
-              and thinking.
-            </p>
-            <div className="mt-5 grid gap-3 text-sm text-ink/75">
-              <div className="rounded-md bg-leaf/10 p-3">
-                <span className="font-semibold text-ink">Zoom levels:</span>{" "}
-                body systems to mitochondria to ATP synthase.
-              </div>
-              <div className="rounded-md bg-oxygen/10 p-3">
-                <span className="font-semibold text-ink">Two modes:</span>{" "}
-                simple explanations first, advanced terms when wanted.
-              </div>
-              <div className="rounded-md bg-glucose/10 p-3">
-                <span className="font-semibold text-ink">Key concepts:</span>{" "}
-                oxygen, electron carriers, gradients, heat, ATP, and ROS.
+          <>
+            <div className="rounded-lg border border-ink/10 bg-white p-5 shadow-sm">
+              <h2 className="text-2xl font-bold text-ink">
+                What you will learn
+              </h2>
+              <p className="mt-4 text-base leading-7 text-ink/75">
+                This journey connects everyday food choices to the cellular
+                chemistry that powers movement, repair, temperature regulation,
+                and thinking.
+              </p>
+              <div className="mt-5 grid gap-3 text-sm text-ink/75">
+                <div className="rounded-md bg-leaf/10 p-3">
+                  <span className="font-semibold text-ink">Zoom levels:</span>{" "}
+                  body systems to mitochondria to ATP synthase.
+                </div>
+                <div className="rounded-md bg-oxygen/10 p-3">
+                  <span className="font-semibold text-ink">Two modes:</span>{" "}
+                  simple explanations first, advanced terms when wanted.
+                </div>
+                <div className="rounded-md bg-glucose/10 p-3">
+                  <span className="font-semibold text-ink">Key concepts:</span>{" "}
+                  oxygen, electron carriers, gradients, heat, ATP, and ROS.
+                </div>
               </div>
             </div>
-          </div>
+            <SimulationRecipePicker
+              recipes={recipes}
+              selectedRecipeId={selectedRecipeId}
+              onSelectRecipe={selectRecipe}
+            />
+          </>
         ) : !isComplete ? (
           <JourneyStagePanel
             step={activeStep}
