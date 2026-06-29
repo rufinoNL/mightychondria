@@ -18,6 +18,48 @@ export function ElectronTransportChainSvg({
 
   return (
     <VisualFrame title="Electron flow builds a proton gradient" metadata={metadata}>
+      <style>
+        {`
+          .etc-electron {
+            transform-box: fill-box;
+            transform-origin: center;
+            animation: etc-electron-flow 4.8s ease-in-out infinite;
+          }
+
+          .etc-electron-2 {
+            animation-delay: 1.2s;
+          }
+
+          .etc-electron-3 {
+            animation-delay: 2.4s;
+          }
+
+          @keyframes etc-electron-flow {
+            0% {
+              opacity: 0.25;
+              transform: translateX(-18px) scale(0.85);
+            }
+            18% {
+              opacity: 0.95;
+            }
+            82% {
+              opacity: 0.95;
+            }
+            100% {
+              opacity: 0.25;
+              transform: translateX(38px) scale(0.85);
+            }
+          }
+
+          @media (prefers-reduced-motion: reduce) {
+            .etc-electron {
+              animation: none;
+              opacity: 0.9;
+              transform: none;
+            }
+          }
+        `}
+      </style>
       <rect x="46" y="128" width="308" height="44" rx="22" fill="#f2dfcf" opacity="0.96" />
       <rect x="58" y="140" width="284" height="20" rx="10" fill="#fff4e8" opacity="0.76" />
       {complexes.map(({ label, x, fill }) => (
@@ -64,6 +106,35 @@ export function ElectronTransportChainSvg({
         strokeLinecap="round"
         strokeLinejoin="round"
       />
+      <g aria-hidden="true">
+        <circle
+          className="etc-electron"
+          cx="112"
+          cy="86"
+          r="4"
+          fill="#fff7ed"
+          stroke="#d89216"
+          strokeWidth="2"
+        />
+        <circle
+          className="etc-electron etc-electron-2"
+          cx="174"
+          cy="86"
+          r="4"
+          fill="#fff7ed"
+          stroke="#d89216"
+          strokeWidth="2"
+        />
+        <circle
+          className="etc-electron etc-electron-3"
+          cx="236"
+          cy="86"
+          r="4"
+          fill="#fff7ed"
+          stroke="#d89216"
+          strokeWidth="2"
+        />
+      </g>
       <circle cx="300" cy="86" r="12" fill="#2878b8" />
       <text x="300" y="90" textAnchor="middle" className="fill-white text-xs font-bold">
         O2
